@@ -6,9 +6,11 @@ import Login from './Login.js';
 import './App.css';
 import Papa from 'papaparse';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
+import Dashboard from './Dashboard'; 
+import Sidebar from './Sidebar'; 
+import './Sidebar.css'; 
 
-const API_URL = 'http://localhost:5000/students';
-
+const API_URL = 'http://localhost:5000/residents';
 
 const InputMethodModal = ({ isOpen, onClose, onSelectInputMethod, inputMethod, formData, handleChange, handleAddSubmit, handleEditSubmit, isEditing, handleCSVUpload }) => {
   if (!isOpen) return null;
@@ -39,105 +41,57 @@ const InputMethodModal = ({ isOpen, onClose, onSelectInputMethod, inputMethod, f
           >
             Upload CSV
           </button>
-          
         </div>
 
         {inputMethod === 'manual' && (
           <form onSubmit={isEditing ? handleEditSubmit : handleAddSubmit}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', width: '45%' }}>
-              <label>ID:</label>
-              <input 
-                type="text" 
-                name="id" 
-                placeholder="ID" 
-                value={formData.id} 
-                onChange={handleChange} 
-                required 
-                disabled={isEditing} 
-              />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', width: '45%' }}>
-              <label>Name:</label>
-              <input 
-                type="text" 
-                name="name" 
-                placeholder="Name" 
-                value={formData.name} 
-                onChange={handleChange} 
-                required 
-              />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', width: '45%' }}>
-              <label>Course:</label>
-              <input 
-                type="text" 
-                name="course" 
-                placeholder="Course" 
-                value={formData.course} 
-                onChange={handleChange} 
-                required 
-              />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', width: '45%' }}>
-              <label>Age:</label>
-              <input 
-                type="number" 
-                name="age" 
-                placeholder="Age" 
-                value={formData.age} 
-                onChange={handleChange} 
-                required 
-              />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', width: '45%' }}>
-              <label>Address:</label>
-              <input 
-                type="text" 
-                name="address" 
-                placeholder="Address" 
-                value={formData.address} 
-                onChange={handleChange} 
-                required 
-              />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', width: '45%' }}>
-              <label>Email:</label>
-              <input 
-                type="email" 
-                name="email" 
-                placeholder="Email" 
-                value={formData.email} 
-                onChange={handleChange} 
-                required 
-              />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', width: '45%' }}>
-              <label>Enrollment Date:</label>
-              <input 
-                type="date" 
-                name="enrollmentDate" 
-                placeholder="Enrollment Date" 
-                value={formData.enrollmentDate} 
-                onChange={handleChange} 
-                required 
-              />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', width: '45%' }}>
-              <label>Phone:</label>
-              <input 
-                type="tel" 
-                name="phone" 
-                placeholder="Phone" 
-                value={formData.phone} 
-                onChange={handleChange} 
-                required 
-              />
-            </div>
+            <label htmlFor="id">ID:</label>
+            <input type="text" id="id" name="id" placeholder="ID" required disabled={isEditing} autoComplete="off" />
+          
+            <label htmlFor="name">Full Name:</label>
+            <input type="text" id="name" name="name" required autoComplete="name" />
+          
+            <label htmlFor="age">Age:</label>
+            <input type="number" id="age" name="age" required autoComplete="bday" />
+          
+            <label htmlFor="gender">Gender:</label>
+            <select id="gender" name="gender" required>
+              <option value="">Select Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Prefer not to say">Prefer not to say</option>
+            </select>
+          
+            <label htmlFor="householdNumber">Household Number:</label>
+            <input type="text" id="householdNumber" name="householdNumber" required />
+          
+            <label htmlFor="occupation">Occupation:</label>
+            <input type="text" id="occupation" name="occupation" required />
+          
+            <label htmlFor="civilStatus">Civil Status:</label>
+            <select id="civilStatus" name="civilStatus" required>
+              <option value="">Select Status</option>
+              <option value="Single">Single</option>
+              <option value="Married">Married</option>
+              <option value="Widowed">Widowed</option>
+              <option value="Separated">Separated</option>
+            </select>
+          
+            <label htmlFor="dependents">Number of Dependents:</label>
+            <input type="number" id="dependents" name="dependents" required />
+          
+            <label htmlFor="voterStatus">Voter Status:</label>
+            <select id="voterStatus" name="voterStatus" required>
+              <option value="">Select</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          
             <button type="submit">
-          {isEditing ? "Update Student" : "Add Student"}
-        </button>
+              {isEditing ? "Update Resident" : "Add Resident"}
+            </button>
           </form>
-        )}
+        )}        
 
         {inputMethod === 'csv' && (
           <div className="csv-upload">
@@ -148,7 +102,7 @@ const InputMethodModal = ({ isOpen, onClose, onSelectInputMethod, inputMethod, f
             />
             <p>
               Please ensure your CSV file has the following columns in order:<br />
-              ID, Name, Course, Age, Address, Email, Enrollment Date, Phone
+              ID, Name, Age, Gender, Address, Household Number, Occupation, CivilStatus, Dependents, Contact Number, Email, Voter Status
             </p>
           </div>
         )}
@@ -177,33 +131,44 @@ function App() {
   const [formData, setFormData] = useState({
     id: '',
     name: '',
-    course: '',
     age: '',
+    gender: '',
     address: '',
+    householdNumber: '',
+    occupation: '',
+    civilStatus: '',
+    dependents: '',
+    contactNumber: '',
     email: '',
-    enrollmentDate: '',
-    phone: ''
+    voterStatus: ''
   });
-  const [students, setStudents] = useState([]);
+  
+  const [residents, setResidents] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchField, setSearchField] = useState('name');
-  const [filteredStudents, setFilteredStudents] = useState([]);
+  const [filteredResidents, setfilteredResidents] = useState([]);
   const [inputMethod, setInputMethod] = useState('manual');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  //RBAC
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [residentToDelete, setResidentToDelete] = useState(null);
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [currentChartPage, setCurrentChartPage] = useState(1);
+  
+  // RBAC
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-
-
-  //Login
+  // Login
   const userRoles = {
-    admin: ["add_student", "edit_student", "delete_student", "view_students"],
-    user: ["add_student", "edit_student", "delete_student", "view_students"],
-    student: ["view_students"],
+    admin: ["add_resident", "edit_resident", "delete_resident", "view_residents"],
+    user: ["add_resident", "edit_resident", "delete_resident", "view_residents"],
+    resident: ["view_residents"],
   };
 
   const hasPermission = (permission) => {
@@ -226,14 +191,12 @@ function App() {
     }
     setLoading(false);
   }, []);
-  
 
   useEffect(() => {
     if (!isAuthenticated) return; 
-    fetchStudents();
+    fetchResidents();
   }, [isAuthenticated]);
-  
-  
+
   // Event handlers
   const handleLogin = (user, token) => {
     setCurrentUser(user);
@@ -244,11 +207,10 @@ function App() {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     }
     
-    
     toast.success('Logged in successfully!');
   };
 
-  //Logout
+  // Logout
   const handleLogout = () => {
     setShowLogoutModal(true);
   };
@@ -263,7 +225,6 @@ function App() {
       setIsAuthenticated(false);
       setCurrentUser(null);
       setShowLogoutModal(false);
-      
     }, 800);
   };
 
@@ -271,11 +232,9 @@ function App() {
     setShowLogoutModal(false);
   };
 
-
   if (!isAuthenticated) {
     return <Login onLogin={handleLogin} />;
   }
-
 
   const handleSelectInputMethod = (method) => {
     setInputMethod(method);
@@ -284,18 +243,22 @@ function App() {
   const handleCSVUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
+  
     const headerMap = {
       id: "id",
       name: "name",
-      course: "course",
       age: "age",
+      gender: "gender",
       address: "address",
+      householdnumber: "householdNumber",
+      occupation: "occupation",
+      civilstatus: "civilStatus",
+      dependents: "dependents",
+      contactnumber: "contactNumber",
       email: "email",
-      "enrollmentdate": "enrollmentDate",
-      phone: "phone"
+      voterstatus: "voterStatus"
     };
-
+  
     Papa.parse(file, {
       header: true,
       transformHeader: (header) => {
@@ -304,85 +267,77 @@ function App() {
       },
       complete: async (result) => {
         console.log("Raw parsed data:", result.data);
-
+  
         const csvData = result.data
-          .filter(row => {
-            return Object.values(row).some(value => value !== undefined && value !== null && String(value).trim() !== "");
-          })
-          .map(student => {
-            const cleanedStudent = {
-              id: student.id?.toString().trim() || null,
-              name: student.name?.toString().trim() || null,
-              course: student.course?.toString().trim() || null,
-              age: student.age ? parseInt(student.age.toString().trim(), 10) : null,
-              address: student.address?.toString().trim() || null,
-              email: student.email?.toString().trim() || null,
-              enrollmentDate: student.enrollmentDate?.toString().trim() || null,
-              phone: student.phone?.toString().trim() || null,
+          .filter(row => Object.values(row).some(value => value && String(value).trim() !== ""))
+          .map(resident => {
+            const cleanedResident = {
+              id: resident.id?.toString().trim() || null,
+              name: resident.name?.toString().trim() || null,
+              age: resident.age ? parseInt(resident.age.toString().trim(), 10) : null,
+              gender: resident.gender?.toString().trim() || null,
+              address: resident.address?.toString().trim() || null,
+              householdNumber: resident.householdNumber?.toString().trim() || null,
+              occupation: resident.occupation?.toString().trim() || null,
+              civilStatus: resident.civilStatus?.toString().trim() || null,
+              dependents: resident.dependents ? parseInt(resident.dependents.toString().trim(), 10) : null,
+              contactNumber: resident.contactNumber?.toString().trim() || null,
+              email: resident.email?.toString().trim() || null,
+              voterStatus: resident.voterStatus?.toString().trim().toLowerCase() === "yes" ? "Yes" : "No"
             };
-
-            console.log("Cleaned student data:", cleanedStudent);
-
-            const missingFields = Object.entries(cleanedStudent)
-              .filter(([key, value]) => {
-                const isEmpty = !value && value !== 0;
-                if (isEmpty) {
-                  console.warn(`Field "${key}" is empty for student ${cleanedStudent.id}`);
-                }
-                return isEmpty;
-              })
-              .map(([key]) => key);
-
-            if (missingFields.length > 0) {
-              console.warn(`Student ${cleanedStudent.id} missing fields: ${missingFields.join(', ')}`);
-            }
-
-            return cleanedStudent;
+  
+            console.log("Cleaned resident data:", cleanedResident);
+  
+            return cleanedResident;
           });
-
+  
         console.log("Processed data (cleaned):", csvData);
-
-        const invalidRows = csvData.filter(student => {
+  
+        const invalidRows = csvData.filter(resident => {
           const missingFields = [];
-          if (!student.id) missingFields.push('id');
-          if (!student.name) missingFields.push('name');
-          if (!student.course) missingFields.push('course');
-          if (student.age === null) missingFields.push('age');
-          if (!student.address) missingFields.push('address');
-          if (!student.email) missingFields.push('email');
-          if (!student.enrollmentDate) missingFields.push('enrollmentDate');
-          if (!student.phone) missingFields.push('phone');
-
+          if (!resident.id) missingFields.push('id');
+          if (!resident.name) missingFields.push('name');
+          if (!resident.age) missingFields.push('age');
+          if (!resident.gender) missingFields.push('gender');
+          if (!resident.address) missingFields.push('address');
+          if (!resident.householdNumber) missingFields.push('householdNumber');
+          if (!resident.occupation) missingFields.push('occupation');
+          if (!resident.civilStatus) missingFields.push('civilStatus');
+          if (resident.dependents === null) missingFields.push('dependents');
+          if (!resident.contactNumber) missingFields.push('contactNumber');
+          if (!resident.email) missingFields.push('email');
+          if (!resident.voterStatus) missingFields.push('voterStatus');
+  
           if (missingFields.length > 0) {
-            console.error(`Invalid row for student ${student.id}:`, {
+            console.error(`Invalid row for resident ${resident.id}:`, {
               missingFields,
-              rowData: student
+              rowData: resident
             });
           }
-
+  
           return missingFields.length > 0;
         });
-
+  
         if (invalidRows.length > 0) {
           console.error("Invalid rows detected:", invalidRows);
           toast.error(`CSV contains ${invalidRows.length} row(s) with missing required fields. Please ensure all fields are filled.`);
           return;
         }
-
+  
         if (csvData.length === 0) {
           toast.error('No valid data found in CSV');
           return;
         }
-
+  
         try {
-          for (const student of csvData) {
-            console.log("Attempting to upload student:", student);
-            const response = await axios.post(API_URL, student);
+          for (const resident of csvData) {
+            console.log("Attempting to upload resident:", resident);
+            const response = await axios.post(API_URL, resident);
             console.log("Upload response:", response.data);
           }
-
+  
           toast.success('CSV uploaded successfully!');
-          fetchStudents();
+          fetchResidents();
         } catch (error) {
           console.error('Upload error:', {
             error,
@@ -399,22 +354,35 @@ function App() {
       }
     });
   };
-
-  const fetchStudents = async () => {
+  
+  const fetchResidents = async () => {
     try {
       const response = await axios.get(API_URL);
-      const sortedStudents = response.data.sort((a, b) => {
+      const sortedresidents = response.data.sort((a, b) => {
         const numA = parseInt(a.id.replace(/\D/g, ""), 10); // Extract numeric part
         const numB = parseInt(b.id.replace(/\D/g, ""), 10);
         return numA - numB;
       });
-      setStudents(sortedStudents);
-      setFilteredStudents(sortedStudents);
+      setResidents(sortedresidents);
+      setfilteredResidents(sortedresidents);
     } catch (error) {
-      console.error('Error fetching students:', error);
-      toast.error('Error fetching students!');
+      console.error('Error fetching residents:', error);
+      toast.error('Error fetching residents!');
     }
   };
+
+  // Create a resident
+const addResident = async (residentData) => {
+  try {
+      const token = localStorage.getItem("token");
+      const response = await axios.post(API_URL, residentData, {
+          headers: { Authorization: `Bearer ${token}` },
+      });
+      console.log("Resident added:", response.data);
+  } catch (error) {
+      console.error("Error adding resident:", error.response?.data || error.message);
+  }
+};
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -422,134 +390,185 @@ function App() {
 
   const handleSearch = () => {
     if (!searchTerm.trim()) {
-      setFilteredStudents(students);
+      setfilteredResidents(residents);
       return;
     }
 
-    const filtered = students.filter(student => {
-      const searchValue = student[searchField]?.toString().toLowerCase() || '';
+    const filtered = residents.filter(resident => {
+      const searchValue = resident[searchField]?.toString().toLowerCase() || '';
       return searchValue.includes(searchTerm.toLowerCase());
     });
 
-    setFilteredStudents(filtered);
+    setfilteredResidents(filtered);
+    setCurrentPage(1); // Reset to first page after search
 
     if (filtered.length === 0) {
-      toast.info("No students found.");
+      toast.info("No residents found.");
     } else {
-      toast.success(`Found ${filtered.length} student(s)`);
+      toast.success(`Found ${filtered.length} resident(s)`);
     }
   };
 
   const handleResetSearch = () => {
     setSearchTerm('');
-    setFilteredStudents(students);
+    setfilteredResidents(residents);
+    setCurrentPage(1); // Reset to first page after reset
   };
 
   const handleAddSubmit = async (e) => {
     e.preventDefault();
     try {
       await axios.post(API_URL, formData);
-      toast.success('Student added successfully!');
-      fetchStudents();
+      toast.success('Resident added successfully!');
+      fetchResidents();
       setFormData({
         id: '',
         name: '',
-        course: '',
         age: '',
+        gender: '',
         address: '',
+        householdNumber: '',
+        occupation: '',
+        civilStatus: '',
+        dependents: '',
+        contactNumber: '',
         email: '',
-        enrollmentDate: '',
-        phone: ''
+        voterStatus: ''
       });
       setIsModalOpen(false); // Close modal after submission
     } catch (error) {
-      toast.error('Error adding student!');
+      toast.error('Error adding resident!');
     }
   };
-
-
+  
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
       await axios.put(`${API_URL}/${formData.id}`, formData);
-      toast.success('Student updated successfully!');
-      fetchStudents();
+      toast.success('Resident updated successfully!');
+      fetchResidents();
       setFormData({
         id: '',
         name: '',
-        course: '',
         age: '',
+        gender: '',
         address: '',
+        householdNumber: '',
+        occupation: '',
+        civilStatus: '',
+        dependents: '',
+        contactNumber: '',
         email: '',
-        enrollmentDate: '',
-        phone: ''
+        voterStatus: ''
       });
       setIsEditing(false);
       setIsModalOpen(false);
     } catch (error) {
-      toast.error('Error updating student!');
-    }
-  };
-
-
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this student?")) return;
-    try {
-      await axios.delete(`${API_URL}/${id}`);
-      toast.success("Student deleted!");
-      await fetchStudents();
-    } catch (error) {
-      toast.error("Error deleting student!");
+      toast.error('Error updating resident!');
     }
   };
   
-
-  const handleEdit = (student) => {
-    setFormData(student);
+  const handleDelete = async () => {
+    if (!residentToDelete) return;
+    
+    try {
+      await axios.delete(`${API_URL}/${residentToDelete}`);
+      toast.success("Resident deleted!");
+      fetchResidents();
+      setIsDeleteModalOpen(false); // Close modal after deletion
+    } catch (error) {
+      toast.error("Error deleting resident!");
+    }
+  };
+  
+  // Function to open the modal
+  const confirmDelete = (id) => {
+    setResidentToDelete(id);
+    setIsDeleteModalOpen(true);
+  };
+  
+  const handleEdit = (resident) => {
+    setFormData(resident);
     setIsEditing(true);
     setInputMethod('manual');
     setIsModalOpen(true); // Open modal when editing
   };
 
-  const courseData = students.reduce((acc, student) => {
-    const course = student.course;
-    acc[course] = (acc[course] || 0) + 1;
+  // Pagination logic
+  const indexOfLastresident = currentPage * itemsPerPage;
+  const indexOfFirstresident = indexOfLastresident - itemsPerPage;
+  const currentresidents = filteredResidents.slice(indexOfFirstresident, indexOfLastresident);
+  const totalPages = Math.ceil(filteredResidents.length / itemsPerPage);
+
+  const paginate = (pageNumber) => {
+    // Make sure page number is within valid range
+    if (pageNumber < 1) pageNumber = 1;
+    if (pageNumber > totalPages) pageNumber = totalPages;
+    setCurrentPage(pageNumber);
+  };
+  
+  const paginateCharts = (pageNumber) => {
+    // Chart pagination has 3 fixed pages
+    if (pageNumber < 1) pageNumber = 1;
+    if (pageNumber > 3) pageNumber = 3;
+    setCurrentChartPage(pageNumber);
+  };
+
+  // Data for charts
+  const genderData = residents.reduce((acc, resident) => {
+    acc[resident.gender] = (acc[resident.gender] || 0) + 1;
     return acc;
   }, {});
 
-  const courseChartData = Object.entries(courseData).map(([course, count]) => ({
-    name: course,
-    students: count,
+  const genderChartData = Object.entries(genderData).map(([gender, count]) => ({
+    name: gender,
+    residents: count,
   }));
 
-  const ageData = students.reduce((acc, student) => {
-    acc[student.age] = (acc[student.age] || 0) + 1;
+  // Age Distribution Data
+  const ageData = residents.reduce((acc, resident) => {
+    const ageGroup = resident.age < 18 ? 'Under 18' :
+                     resident.age < 30 ? '18-29' :
+                     resident.age < 50 ? '30-49' :
+                     '50+';
+    acc[ageGroup] = (acc[ageGroup] || 0) + 1;
     return acc;
   }, {});
 
-  const ageChartData = Object.entries(ageData).map(([age, count]) => ({
-    name: age,
-    students: count,
+  const ageChartData = Object.entries(ageData).map(([ageGroup, count]) => ({
+    name: ageGroup,
+    residents: count,
   }));
 
-  const enrollmentData = students.reduce((acc, student) => {
-    const date = new Date(student.enrollmentDate);
-    const yearMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-    acc[yearMonth] = (acc[yearMonth] || 0) + 1;
+  // Household Size Data
+  const householdData = residents.reduce((acc, resident) => {
+    acc[resident.householdNumber] = (acc[resident.householdNumber] || 0) + 1;
     return acc;
   }, {});
 
-  const enrollmentChartData = Object.entries(enrollmentData).map(([date, count]) => ({
-    date,
-    students: count,
+  const householdChartData = Object.entries(householdData).map(([household, count]) => ({
+    name: `Household ${household}`,
+    residents: count,
+  }));
+
+  // Voter Status Data
+  const voterData = residents.reduce((acc, resident) => {
+    acc[resident.voterStatus] = (acc[resident.voterStatus] || 0) + 1;
+    return acc;
+  }, {});
+
+  const voterChartData = Object.entries(voterData).map(([status, count]) => ({
+    name: status === "Yes" ? "Registered Voters" : "Non-Voters",
+    residents: count,
   }));
 
   return (
     <>
-    <div className='Header'> 
-    <button className="logout-button" onClick={handleLogout} >Logout</button>
-  </div>
-  {showLogoutModal && (
+      <div className='Header'> 
+        <button className="logout-button" onClick={handleLogout}>Logout</button>
+      </div>
+      
+      {showLogoutModal && (
         <div className="modal-overlay-logout">
           <div className="modal-card-logout">
             <h3>Are you sure you want to logout?</h3>
@@ -565,152 +584,303 @@ function App() {
         </div>
       )}
     
-    <div className="container" style={{ textAlign: 'center', alignContent: 'center' }}>
-      <h1>Student Management System</h1>
+      <div className="container" style={{ textAlign: 'center', alignContent: 'center' }}>
+        {/* Delete Confirmation Modal */}
+        {isDeleteModalOpen && (
+          <div className="modal-overlay">
+            <div className="modal">
+              <h3>Confirm Deletion</h3>
+              <p>Are you sure you want to delete this resident?</p>
+              <div className="modal-buttons">
+                <button className="cancel-btn" onClick={() => setIsDeleteModalOpen(false)}>Cancel</button>
+                <button className="delete-btn" onClick={handleDelete}>Delete</button>
+              </div>
+            </div>
+          </div>
+        )}
 
-      <div className="search-section">
-        <select value={searchField} onChange={(e) => setSearchField(e.target.value)}>
-          <option value="name">Name</option>
-          <option value="course">Course</option>
-          <option value="email">Email</option>
-          <option value="id">ID</option>
-        </select>
-        <input
-          type="text"
-          placeholder="Enter search term..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)} />
-        <button onClick={handleSearch} id="search-button">Search</button>
-        <button onClick={handleResetSearch} id="reset-button">Reset</button>
-      </div>
+        <div className="barangay-header">
+          <div className="barangay-logo-container">
+            <img
+              src="/brgy-logo.jpg"
+              alt="Selyo ng Barangay Del Carmen"
+              className="barangay-logo"
+            />
+            <div className="barangay-text-container">
+              <h1 className="barangay-name">BARANGAY PROFILING SYSTEM</h1>
+              <p className="barangay-location">Del Carmen, Iligan City</p>
+            </div>
+          </div>
+        </div>
 
-      {hasPermission("add_student") && (
-        <button
-        onClick={() => {
-          setIsEditing(false); // Ensure it's not in edit mode
-          setFormData({       // Reset form data
-            id: '',
-            name: '',
-            course: '',
-            age: '',
-            address: '',
-            email: '',
-            enrollmentDate: '',
-            phone: ''
-          });
-          setIsModalOpen(true); // Open modal
-        }}
-        className='add-btn'
-        id="cssAddButton"
-      >
-        Add Student
-      </button>
-      
-      
-          )}
+        <div className="search-section">
+          <select value={searchField} onChange={(e) => setSearchField(e.target.value)}>
+            <option value="name">Name</option>
+            <option value="age">Age</option>
+            <option value="email">Email</option>
+            <option value="id">ID</option>
+          </select>
+          <input
+            type="text"
+            placeholder="Enter search term..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)} 
+          />
+          <button onClick={handleSearch} id="search-button">Search</button>
+          <button onClick={handleResetSearch} id="reset-button">Reset</button>
+        </div>
 
+        {hasPermission("add_resident") && (
+          <button
+            onClick={() => {
+              setIsEditing(false); // Ensure it's not in edit mode
+              setFormData({       // Reset form data for residents
+                id: '',
+                name: '',
+                age: '',
+                gender: '',
+                address: '',
+                householdNumber: '',
+                occupation: '',
+                civilStatus: '',
+                dependents: '',
+                contactNumber: '',
+                email: '',
+                voterStatus: ''
+              });
+              setIsModalOpen(true); // Open modal
+            }}
+            className='add-btn'
+            id="cssAddButton"
+          >
+            Add New Resident
+          </button>
+        )}
 
-      <InputMethodModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSelectInputMethod={handleSelectInputMethod}
-        inputMethod={inputMethod}
-        formData={formData}
-        handleChange={handleChange}
-        handleAddSubmit={handleAddSubmit}
-        handleEditSubmit={handleEditSubmit}
-        isEditing={isEditing}
-        handleCSVUpload={handleCSVUpload} />
+        <InputMethodModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSelectInputMethod={handleSelectInputMethod}
+          inputMethod={inputMethod}
+          formData={formData}
+          handleChange={handleChange}
+          handleAddSubmit={handleAddSubmit}
+          handleEditSubmit={handleEditSubmit}
+          isEditing={isEditing}
+          handleCSVUpload={handleCSVUpload} 
+        />
 
-      <h2 style={{ color: "#40B5AD", fontSize: "24px", fontWeight: "bold", fontFamily: "Arial, sans-serif" }}>
-        Student List
-      </h2>
+        {/* Add the Sidebar component here */}
+        <Sidebar
+          activeTab="residents"
+          setActiveTab={() => {}}
+          handleLogout={handleLogout}
+        />
+        n
+        {/* Add the Dashboard component here */}
+        <Dashboard residents={residents} />
 
-      <table border="1" align="center" style={{ width: '100%' }}>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Course</th>
-            <th>Age</th>
-            <th>Address</th>
-            <th>Email</th>
-            <th>Enrollment Date</th>
-            <th>Phone</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredStudents.map((student) => (
-            <tr key={student.id}>
-              <td>{student.id}</td>
-              <td>{student.name}</td>
-              <td>{student.course}</td>
-              <td>{student.age}</td>
-              <td>{student.address}</td>
-              <td>{student.email}</td>
-              <td>{student.enrollmentDate}</td>
-              <td>{student.phone}</td>
-              <td>
-                <div className="action-buttons">
+        <div className="table-section">
+          <h2 style={{ color: "#40B5AD", fontSize: "28px", fontWeight: "bold", fontFamily: "Arial, sans-serif", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "20px", marginTop: "50px", paddingBottom: "10px", borderBottom: "2px solid #40B5AD", display: "block" }}>
+            List of Residents
+          </h2>
+          
+          <div className="items-per-page">
+            <label>Items per page: </label>
+            <select 
+              value={itemsPerPage} 
+              onChange={(e) => {
+                setItemsPerPage(Number(e.target.value));
+                setCurrentPage(1);
+              }}
+            >
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={50}>50</option>
+            </select>
+          </div>
 
-                  {hasPermission("edit_student") && (
-                  <button id="edit-button" onClick={() => handleEdit(student)}>Edit</button> )}
-
-                {hasPermission("delete_student") && (
-                  <button id="delete-button" onClick={() => handleDelete(student.id)}>Delete</button> )}
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      
-      {/* Charts Section */}
-      <h2 style={{ color: "#40B5AD", fontSize: "24px", fontWeight: "bold", fontFamily: "Arial, sans-serif" }}>
-        Data Visualization
-      </h2>
-
-      <div className="chart-container" style={{ padding: "20px", backgroundColor: "#f4f7fc", borderRadius: "8px", boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)" }}>
-        <h3>Number of Students per Course</h3>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={courseChartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" label={{ value: 'Course', position: 'insideBottom', offset: -5 }} />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="students" fill="#8884d8" />
-          </BarChart>
-        </ResponsiveContainer>
-
-        <h3>Age Distribution</h3>
-        <ResponsiveContainer width="100%" height={300}>
-          <PieChart>
-            <Pie data={ageChartData} dataKey="students" nameKey="name" cx="50%" cy="50%" outerRadius={100} label>
-              {ageChartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={['#0088FE', '#00C49F', '#FFBB28', '#FF8042'][index % 4]} />
+          <table border="1" align="center" style={{ width: '100%' }}>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Household #</th>
+                <th>Occupation</th>
+                <th>Civil Status</th>
+                <th>Dependents</th>
+                <th>Voter</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {residents.map((resident) => (
+                <tr key={resident.id}>
+                  <td>{resident.id}</td>
+                  <td>{resident.name}</td>
+                  <td>{resident.age}</td>
+                  <td>{resident.gender}</td>
+                  <td>{resident.householdNumber}</td>
+                  <td>{resident.occupation}</td>
+                  <td>{resident.civilStatus}</td>
+                  <td>{resident.dependents}</td>
+                  <td>{resident.voterStatus}</td>
+                  <td>
+                    <button onClick={() => handleEdit(resident)}>Edit</button>
+                    <button onClick={() => handleDelete(resident.id)}>Delete</button>
+                  </td>
+                </tr>
               ))}
-            </Pie>
-            <Tooltip />
-          </PieChart>
-        </ResponsiveContainer>
+            </tbody>
+          </table>
 
-        <h3>Enrollment Trends Over Time</h3>
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={enrollmentChartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" label={{ value: 'Date (Year-Month)', position: 'insideBottom', offset: -5 }} />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="students" stroke="#8884d8" />
-          </LineChart>
-        </ResponsiveContainer>
+          {/* Pagination for table */}
+          <div className="pagination">
+            <button 
+              onClick={() => paginate(currentPage - 1)} 
+              disabled={currentPage === 1}
+              className="pagination-button"
+            >
+              Previous
+            </button>
+            
+            <div className="page-numbers">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(number => (
+                <button
+                  key={number}
+                  onClick={() => paginate(number)}
+                  className={currentPage === number ? 'active-page' : 'pagination-button'}
+                >
+                  {number}
+                </button>
+              ))}
+            </div>
+            
+            <button 
+              onClick={() => paginate(currentPage + 1)} 
+              disabled={currentPage === totalPages || totalPages === 0}
+              className="pagination-button"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+        
+        {/* Charts Section */}
+        <div className="charts-section">
+          <h2 style={{ color: "#40B5AD", fontSize: "24px", fontWeight: "bold", fontFamily: "Arial, sans-serif" }}>
+            Data Visualization
+          </h2>
+
+          <div className="chart-container" style={{ padding: "20px", backgroundColor: "#f4f7fc", borderRadius: "8px", boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)" }}>
+            
+            {/* Gender Distribution */}
+            {currentChartPage === 1 && (
+              <>
+                <h3>Gender Distribution</h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie data={genderChartData} dataKey="residents" nameKey="name" cx="50%" cy="50%" outerRadius={100} label>
+                      {genderChartData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={['#0088FE', '#00C49F'][index % 2]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </>
+            )}
+
+            {/* Age Distribution */}
+            {currentChartPage === 2 && (
+              <>
+                <h3>Age Distribution</h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={ageChartData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" label={{ value: 'Age Groups', position: 'insideBottom', offset: -5 }} />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="residents" fill="#8884d8" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </>
+            )}
+
+            {/* Household Sizes */}
+            {currentChartPage === 3 && (
+              <>
+                <h3>Household Sizes</h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={householdChartData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" label={{ value: 'Household Number', position: 'insideBottom', offset: -5 }} />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="residents" fill="#8884d8" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </>
+            )}
+
+            {/* Voter Status */}
+            {currentChartPage === 4 && (
+              <>
+                <h3>Voter Status</h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie data={voterChartData} dataKey="residents" nameKey="name" cx="50%" cy="50%" outerRadius={100} label>
+                      {voterChartData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={['#00C49F', '#FFBB28'][index % 2]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </>
+            )}
+
+            {/* Pagination for charts */}
+            <div className="chart-pagination">
+              <button 
+                onClick={() => paginateCharts(currentChartPage - 1)} 
+                disabled={currentChartPage === 1}
+                className="pagination-button"
+              >
+                Previous
+              </button>
+              
+              <div className="page-numbers">
+                {[1, 2, 3, 4].map(number => (
+                  <button
+                    key={number}
+                    onClick={() => paginateCharts(number)}
+                    className={currentChartPage === number ? 'active-page' : 'pagination-button'}
+                  >
+                    {number}
+                  </button>
+                ))}
+              </div>
+              
+              <button 
+                onClick={() => paginateCharts(currentChartPage + 1)} 
+                disabled={currentChartPage === 4}
+                className="pagination-button"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <ToastContainer />
       </div>
-
-      <ToastContainer />
-    </div></>
+    </>
   );
 }
 

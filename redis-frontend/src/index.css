@@ -5,10 +5,11 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(to right, rgba(4, 57, 39, 0.8), rgba(11, 102, 35, 0.8)), url('/public/bgschool.jpg');
-  background-size: cover;
+  /* background: linear-gradient(to right, rgba(4, 57, 39, 0.8), rgba(11, 102, 35, 0.8)), url('/public/bgschool.jpg');
+  background-size: cover; */
+  background-color: #9fb6d8;
 background-position: center;
-  color: white;
+  color: #9fb6d8;
 }
 
 code {

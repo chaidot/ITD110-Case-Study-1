@@ -1,107 +1,228 @@
-/* Container styling */
+/* Formal Barangay Profiling System Login.css */
+:root {
+  --primary-color: #00205b; /* Deep navy blue - formal */
+  --secondary-color: #8b0000; /* Maroon accent from logo */
+  --accent-color: #ffd700; /* Gold from the stars in logo */
+  --light-color: #f8f9fa;
+  --dark-color: #333333;
+  --error-color: #dc3545;
+  --success-color: #28a745;
+  --neutral-gray: #6c757d;
+  --background-color: #f5f7fa;
+}
+
+body {
+  margin: 0;
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  background-color: var(--background-color);
+}
+
 .login-container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  height: 100vh;
-  background: #f4f4f4;
-  
+  justify-content: center;
+  min-height: 50vh;
+  background: linear-gradient(180deg, #1c4179 0%, #e4e7ef 100%);
+  padding: 20px;
 }
 
-/* Form styling */
-.login-form {
-  background: white;
-  padding: 25px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(43, 53, 93, 0.1);
-  text-align: center;
-  max-width: 350px;
+.login-card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
   width: 100%;
+  max-width: 450px;
+  padding: 30px;
+  text-align: center;
 }
 
-/* Form title */
-.login-form h2 {
-  margin-bottom: 20px;
-  font-size: 22px;
-  color: #333;
-}
-
-/* Form group */
-.form-group {
+.barangay-logo-container {
+  margin-bottom: 25px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+}
+
+.barangay-logo {
+  width: 120px;
+  height: auto;
+  border-radius: 50%;
   margin-bottom: 15px;
+  border: 3px solid var(--secondary-color);
 }
 
-/* Label */
+.barangay-name {
+  color: var(--primary-color);
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.barangay-location {
+  color: var(--secondary-color);
+  margin: 5px 0 0;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.system-title {
+  color: var(--neutral-gray);
+  font-size: 0.9rem;
+  margin-top: 5px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.login-form {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.login-form h2 {
+  color: var(--primary-color);
+  margin-bottom: 25px;
+  font-weight: 600;
+  font-size: 1.5rem;
+  position: relative;
+}
+
+.login-form h2:after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background-color: var(--accent-color);
+  border-radius: 3px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
 .form-group label {
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 5px;
+  display: block;
+  margin-bottom: 8px;
+  color: var(--dark-color);
+  font-weight: 500;
+  font-size: 0.9rem;
 }
 
-/* Input fields */
 .form-group input {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 14px;
+  padding: 12px 15px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  box-sizing: border-box;
+  background-color: #f8f9fa;
 }
 
-/* Error message */
+.form-group input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0, 32, 91, 0.1);
+  outline: none;
+  background-color: #ffffff;
+}
+
 .error-message {
-  color: #d9534f;
-  font-size: 14px;
-  margin-bottom: 10px;
+  color: var(--error-color);
+  margin-bottom: 15px;
+  font-size: 0.85rem;
+  text-align: left;
+  padding: 8px 12px;
+  background-color: rgba(220, 53, 69, 0.05);
+  border-left: 3px solid var(--error-color);
+  border-radius: 4px;
 }
 
-/* Submit button */
 .submit-button {
   width: 100%;
-  padding: 10px;
-  background: #4591a2;
+  padding: 12px;
+  background-color: var(--primary-color);
   color: white;
   border: none;
-  border-radius: 5px;
-  font-size: 16px;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background-color 0.2s;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .submit-button:hover {
-  background: #16788e;
+  background-color: #001845;
 }
 
-/* Switch form section */
+.submit-button:active {
+  transform: translateY(1px);
+}
+
+.submit-button:disabled {
+  background-color: var(--neutral-gray);
+  cursor: not-allowed;
+}
+
 .switch-form {
-  margin-top: 15px;
+  margin-top: 20px;
+  font-size: 0.9rem;
+  border-top: 1px solid #eaeaea;
+  padding-top: 15px;
 }
 
 .switch-form p {
-  font-size: 14px;
-  color: #555;
+  margin-bottom: 8px;
+  color: var(--neutral-gray);
 }
 
-/* Switch button */
-.switch-button {
+.switch-button, .forgot-password-link {
   background: none;
   border: none;
-  color: #155639;
-  font-size: 14px;
+  color: var(--primary-color);
+  text-decoration: none;
   cursor: pointer;
-  transition: color 0.3s ease;
+  font-size: 0.9rem;
+  padding: 5px;
+  transition: color 0.3s;
+  font-weight: 500;
 }
 
-.switch-button:hover {
-  color: #088d51;
-  text-shadow: #80d2ad 0px 0px 5px;
+.switch-button:hover, .forgot-password-link:hover {
+  color: var(--secondary-color);
+  text-decoration: underline;
 }
 
-{
-  background: linear-gradient(to right, rgba(4, 57, 39, 0.8), rgba(11, 102, 35, 0.8)), url('/public/bgschool.jpg');
-  background-size: cover;
-background-position: center;
-  color: white;
+.forgot-password {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.copyright {
+  font-size: 0.8rem;
+  color: var(--neutral-gray);
+  margin-top: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 20px;
+  }
+  
+  .barangay-logo {
+    width: 100px;
+  }
+  
+  .barangay-name {
+    font-size: 1.3rem;
+  }
 }
