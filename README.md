@@ -60,3 +60,19 @@ ITD110-Case-Study-1/
 ├── redis-frontend/
 ├── package.json
 └── README.md
+
+🎯 Learning Objectives
+
+This project helped strengthen my skills in:
+
+Full-stack web development
+React frontend development
+Node.js and Express backend development
+REST API development
+Authentication and authorization
+CRUD operations
+Data validation
+Redis integration
+Data visualization
+Debugging and application development
+👩‍💻 Project Context
