@@ -19,7 +19,6 @@ The project demonstrates frontend and backend development, authentication, data 
 - Responsive user interface
 
 ## 🛠️ Technologies
-
 ### Frontend
 - React
 - React Router
@@ -52,7 +51,6 @@ The project demonstrates frontend and backend development, authentication, data 
 - npm
 
 ## 📁 Project Structure
-
 ```text
 ITD110-Case-Study-1/
 ├── ITD110/
@@ -62,7 +60,6 @@ ITD110-Case-Study-1/
 └── README.md
 
 🎯 Learning Objectives
-
 This project helped strengthen my skills in:
 
 Full-stack web development
@@ -75,4 +72,9 @@ Data validation
 Redis integration
 Data visualization
 Debugging and application development
+
 👩‍💻 Project Context
+Academic project for ITD110 – Information Technology course.
+
+📌 Note
+This repository is an academic project created for learning and development purposes.
